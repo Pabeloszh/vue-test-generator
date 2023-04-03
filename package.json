@@ -27,6 +27,7 @@
     "typescript": "^5.0.2"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "vue-template-compiler": "^2.7.14"
   }
 }

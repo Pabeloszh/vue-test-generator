@@ -1,0 +1,1 @@
+export const extractRepoDirectory = (payload) => `${payload.split('/components')[0]}`

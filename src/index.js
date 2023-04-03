@@ -2,11 +2,9 @@ import path from 'path';
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { parse } from '@vue/compiler-sfc';
-import { ScriptParser } from "./script/ScriptParser.js"
-import { PropsAnalyzer } from "./script/PropsAnalyzer.js"
-import { DataAnalyzer } from "./script/DataAnalyzer.js"
-import { ComputedAnalyzer } from "./script/ComputedAnalyzer.js"
-import { MethodsAnalyzer } from "./script/MethodsAnalyzer.js"
+import { extractRepoDirectory } from "./utils/extractRepoDirectory.js"
+import { TestOutputGenerator } from "./generator/TestOutputGenerator.js"
+
 
 const filePath = process.argv[2];
 
@@ -25,46 +23,14 @@ function generateTest(filePath) {
 
   const { script, template } = descriptor;
   
-  const testCode = generateTestCode(name, script, template);
+  const testCode = new TestOutputGenerator(filePath, script, template).generateTestOutput();
 
-  const testPath = path.join('', `./tests/unit/components/${name}/${name}.spec.ts`);
+  const testPath = path.join('', `${extractRepoDirectory(filePath)}/tests/unit/components/${name}/${name}.spec.ts`);
 
-  fs.mkdirSync(`./tests/unit/components/${name}`, { recursive: true });
+  fs.mkdirSync(`${extractRepoDirectory(filePath)}/tests/unit/components/${name}`, { recursive: true });
   fs.writeFileSync(testPath, testCode, 'utf-8');
 
-  execSync('prettier --write "tests/**/*.ts"', { stdio: 'inherit' });
+  execSync(`prettier --write "${extractRepoDirectory(filePath)}/tests/**/*.ts"`, { stdio: 'inherit' });
 
   console.log(`Test file generated: ${testPath}`);
-}
-
-
-function generateTestCode(name, script, template) {
-  const scriptParser = ScriptParser(script)
-  const propsAnalyzer = PropsAnalyzer(scriptParser.getSection('props'))
-  const dataAnalyzer = DataAnalyzer(scriptParser.getSection('data'))
-  const computedAnalyzer = ComputedAnalyzer(scriptParser.getSection('computed'), propsAnalyzer.analyzedCode, dataAnalyzer.analyzedCode)
-  const methodsAnalyzer = MethodsAnalyzer(scriptParser.getSection('methods'))
-  
-  templateGenerator(name, script, template)
-
-  const testOutput = 
-`import { shallowMount } from '@vue/test-utils';
-import ${name} from '@/components/${name}.vue';
-
-describe('${name}', () => {
-    let wrapper: any
-    
-    beforeEach(() => {
-      wrapper = shallowMount(${name}, {
-        
-      })
-    })
-
-    ${propsAnalyzer.generatedTests}
-    ${dataAnalyzer.generatedTests}
-    ${computedAnalyzer.generatedTests}
-    ${methodsAnalyzer.generatedTests}
-  });
-`
-  return testOutput
 }
