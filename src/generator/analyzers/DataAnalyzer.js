@@ -12,7 +12,7 @@ export class DataAnalyzer {
     #dataTypeMap(payload) {
         switch(payload.type){
             case 'ArrayExpression':
-                return payload.elements?.map(el => dataTypeMap(el))
+                return payload.elements?.map(el => this.#dataTypeMap(el))
             case 'BooleanLiteral':
                 return payload.value
             case 'Identifier':
@@ -45,16 +45,15 @@ export class DataAnalyzer {
         }
     }
     dataValueMap(payload) {
-        switch(this.dataConditionMap(payload)) {
-            case 'toBe':
-                return payload
-            case 'toBeTruthy':
-            case 'toBeFalsy':
+        switch(typeof payload) {
+            case 'string':
+                return `'${payload}'`
+            case 'boolean': 
                 return ''
-            case 'toStrictEqual':
+            case 'object':
                 return JSON.stringify(payload)
             default: 
-                return ''
+                return payload
         }
     }
     analyzedCode() {

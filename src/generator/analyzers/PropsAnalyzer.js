@@ -30,6 +30,8 @@ export class PropsAnalyzer {
         return "'function'"
       case 'Boolean':
         return ''
+      case 'String':
+        return `'${payload.default}'`
       default:
         return payload.hasOwnProperty('default') ? payload.default : '/* inherited from parent */'
     }

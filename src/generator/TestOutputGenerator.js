@@ -47,8 +47,7 @@ export class TestOutputGenerator {
 
     #testSectionImports() {
         return `
-            import { shallowMount ${this.#hasAnyVuexMethods() ? ', createLocalVue' : ''} } from '@vue/test-utils'
-            ${this.#hasAnyVuexMethods() ? "import Vuex, { Store } from 'vuex'" : ''}
+            import { shallowMount ${this.#hasAnyVuexMethods() ? ', createLocalVue' : ''} } from '@vue/test-utils'${this.#hasAnyVuexMethods() ? "\nimport Vuex, { Store } from 'vuex'" : ''}
             import ${this.#fileName} from '${findComponentInDirectory(`${extractRepoDirectory(this.#filePath)}/components`, `${this.#fileName}.vue`)}'
             ${this.#componentsImports()}
         `
