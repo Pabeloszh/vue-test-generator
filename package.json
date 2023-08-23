@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-test": "node ./src/index.js"
+    "generate-single-test": "node ./src/generateSingle.js",
+    "generate-all-missing-tests": "node ./src/generateAll.js",
+    "find-missing-tests": "node ./src/findMissing.js"
   },
   "author": "",
   "license": "MIT",
