@@ -13,14 +13,24 @@ npm install
 ```
 
 ## Usage
+### Single Test
 
 To generate unit tests for a Vue component, run the following command:
 
 ```bash
-npm run generate-test <component-path>
+npm run generate-single-test <component-path>
 ```
 
-The **'<component-path>'** argument should be the full path to the Vue component. The script will generate a **'.spec.ts'**  file in the **'tests/unit/components'** directory of your Nuxt.js project.
+The **'component-path'** argument should be the full path to the Vue component. The script will generate a **'.spec.ts'**  file in the **'tests/unit/components'** directory of your Nuxt.js project.
+
+### All Missing Tests
+To generate all missing unit tests for a Vue project, run the following command:
+
+```bash
+npm run generate-all-missing-tests <project-path>
+```
+
+The **'project-path'** argument should be the full path to the Vue project. The script will generate a **'.spec.ts'**  files in the **'tests/unit/components'** directory of your Nuxt.js project.
 
 ## Example 
 ```bash
